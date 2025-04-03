@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { MdOutlineFoodBank } from "react-icons/md";
 
+
 const HomePage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("delivery");
@@ -12,7 +13,7 @@ const HomePage = () => {
         <h1 className="flex items-center space-x-2 text-2xl font-bold tracking-wide text-[#F17228]"><MdOutlineFoodBank /> <span>HOMEMEAL HUB</span></h1>
         <div className="hidden md:flex gap-6">
           <a href="#home" className="text-gray-800 hover:text-[#F17228]">Home</a>
-          <a href="#meals" className="text-gray-800 hover:text-[#F17228]">Meals</a>
+          <a href="/MenuPage" className="text-gray-800 hover:text-[#F17228]">Meals</a>
           <a href="#about" className="text-gray-800 hover:text-[#F17228]">About</a>
           <a href="#contact" className="text-gray-800 hover:text-[#F17228]">Contact</a>
         </div>
@@ -24,7 +25,7 @@ const HomePage = () => {
       {menuOpen && (
         <div className="md:hidden flex flex-col bg-white shadow-md p-4 absolute w-full top-16 z-50">
           <a href="#home" className="py-2" onClick={() => setMenuOpen(false)}>Home</a>
-          <a href="#meals" className="py-2" onClick={() => setMenuOpen(false)}>Meals</a>
+          <a href="/MenuPage" className="py-2" onClick={() => setMenuOpen(false)}>Meals</a>
           <a href="#about" className="py-2" onClick={() => setMenuOpen(false)}>About</a>
           <a href="#contact" className="py-2" onClick={() => setMenuOpen(false)}>Contact</a>
         </div>
@@ -71,7 +72,9 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+      
     </div>
+    
   );
 };
 

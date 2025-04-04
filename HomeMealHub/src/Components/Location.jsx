@@ -1,7 +1,13 @@
 import React from "react";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 const Location = () => {
   return (
+    <div className="bg-[#1f1f1f] text-white text-center py-20">
+      <h1 className="text-4xl font-bold mb-8 flex items-center justify-center gap-2">
+        <FaMapMarkerAlt className="text-orange-500" />
+            Find Our <span className="text-orange-500">Location</span>
+      </h1>
     <iframe
       title="HomeMealHub Location"
       className="w-full h-[400px] border-none"
@@ -9,6 +15,7 @@ const Location = () => {
       allowFullScreen=""
       loading="lazy"
     ></iframe>
+    </div>
   );
 };
 

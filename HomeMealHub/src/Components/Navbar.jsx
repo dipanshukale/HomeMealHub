@@ -23,9 +23,9 @@ const Navbar = () => {
   const navLinks = [
     { path: "/", name: "Home" },
     { path: "/menu", name: "Meals" },
-    { path: "/about", name: "About" },
+    { path: "/AboutUs", name: "About" },
     { path: "/nutrition", name: "Nutrition" },
-    { path: "/contact", name: "Contact" },
+    { path: "/ContactUs", name: "Contact" },
   ];
 
   return (

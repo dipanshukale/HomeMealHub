@@ -4,7 +4,8 @@ import HeroPage from './Pages/HeroPage';
 import NotFound from './Pages/NotFound';
 import Navbar from './Components/Navbar';
 import NutritionPage from './Pages/NutritionPage';
-
+import AboutUs from './Components/AboutUs';
+import ContactUs from './Components/ContactUs';
 
 function App() {
   return (
@@ -12,7 +13,9 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<HeroPage />} />
+        <Route path="/AboutUs" element={<AboutUs />} />
         <Route path="/nutrition" element={<NutritionPage/>} />
+        <Route path="/ContactUs" element={<ContactUs/>} />
         <Route path="*" element={<NotFound />} />
 
        

@@ -1,31 +1,71 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { X } from "lucide-react";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Vendorsection = () => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const fileInputRef = useRef();
+
+  const showToast = (type, message) => {
+    if (type === "success") toast.success(message);
+    else if (type === "error") toast.error(message);
+    else toast.info(message);
+  };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    if (file) {
+    if (file && file.type.startsWith("image/") && file.size < 5 * 1024 * 1024) {
       setSelectedImage(URL.createObjectURL(file));
+    } else {
+      showToast("error", "Please upload a valid image under 5MB.");
     }
   };
 
   const handleRemoveImage = () => {
     setSelectedImage(null);
+    fileInputRef.current.value = null;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form); 
+
+    try {
+      const res = await fetch("http://localhost:8000/api/vendor", {
+        method: "POST",
+        body: formData, 
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        showToast("success", "Form submitted successfully!");
+        form.reset();
+        setSelectedImage(null);
+        fileInputRef.current.value = null;
+      } else {
+        showToast("error", data.message || "Submission failed.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      showToast("error", "Something went wrong. Try again later.");
+    }
   };
 
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 py-12 md:py-16 bg-[] text-white">
+    <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 py-12 md:py-16 bg-white text-black">
+      <ToastContainer position="top-right" autoClose={3000} />
+
       <div className="lg:w-1/2 flex flex-col md:flex-row items-center mb-10 lg:mb-0">
         <div className="relative w-full max-w-[320px] sm:max-w-[420px] h-[380px] sm:h-[500px] md:ml-[-30px] lg:ml-[-60px] mb-8 md:mb-0">
-          <img 
-            src="./chef3.jpg" 
-            className="w-full h-full object-cover rounded-xl shadow-2xl cursor-pointer transition-transform hover:scale-105 duration-300" 
+          <img
+            src="./chef3.jpg"
+            className="w-full h-full object-cover rounded-xl shadow-2xl cursor-pointer transition-transform hover:scale-105 duration-300"
             alt="Chef cooking"
           />
         </div>
-
         <div className="md:ml-6 lg:ml-12 max-w-md text-center md:text-left px-4 sm:px-0">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#F17228] mb-4 leading-tight">
             Join Our Culinary Family & Earn with Your Passion!
@@ -41,34 +81,37 @@ const Vendorsection = () => {
         </div>
       </div>
 
-    
-      <div className="lg:w-1/2 bg-white bg-opacity-10 backdrop-blur-lg p-6 sm:p-8 md:p-10 rounded-xl shadow-2xl max-w-md w-full border border-gray-700 mx-4 sm:mx-0">
+      <div className="lg:w-1/2 bg-white bg-opacity-10 backdrop-blur-lg p-6 sm:p-8 md:p-10 rounded-xl shadow-2xl max-w-md w-full border border-gray-300 mx-4 sm:mx-0">
         <h2 className="text-2xl sm:text-3xl font-extrabold text-center text-black mb-6">
           Join Us Today
         </h2>
-        <form className="space-y-4 sm:space-y-5">
-          <input 
-            type="text" 
-            placeholder="Full Name" 
-            className="w-full p-3 sm:p-4 border border-gray-500 rounded-lg bg-transparent text-black placeholder-gray-500 focus:ring-2 focus:ring-[#d65e1d]" 
-            required 
+        <form className="space-y-4 sm:space-y-5" onSubmit={handleSubmit}>
+          <input
+            name="name"
+            type="text"
+            placeholder="Full Name"
+            className="w-full p-3 sm:p-4 border border-gray-500 rounded-lg bg-transparent text-black placeholder-gray-500 focus:ring-2 focus:ring-[#d65e1d]"
+            required
           />
-          <input 
-            type="email" 
-            placeholder="Email Address" 
-            className="w-full p-3 sm:p-4 border border-gray-500 rounded-lg bg-transparent text-black placeholder-gray-500 focus:ring-2 focus:ring-[#d65e1d]" 
-            required 
+          <input
+            name="email"
+            type="email"
+            placeholder="Email Address"
+            className="w-full p-3 sm:p-4 border border-gray-500 rounded-lg bg-transparent text-black placeholder-gray-500 focus:ring-2 focus:ring-[#d65e1d]"
+            required
           />
-          <input 
-            type="text" 
-            placeholder="Phone Number" 
-            className="w-full p-3 sm:p-4 border border-gray-500 rounded-lg bg-transparent text-black placeholder-gray-500 focus:ring-2 focus:ring-[#d65e1d]" 
-            required 
+          <input
+            name="phone"
+            type="text"
+            placeholder="Phone Number"
+            className="w-full p-3 sm:p-4 border border-gray-500 rounded-lg bg-transparent text-black placeholder-gray-500 focus:ring-2 focus:ring-[#d65e1d]"
+            required
           />
-          <textarea 
-            placeholder="Tell us about your special dish" 
-            className="w-full p-3 sm:p-4 border border-gray-500 rounded-lg bg-transparent text-black placeholder-gray-500 focus:ring-2 focus:ring-[#d65e1d]" 
-            rows="3" 
+          <textarea
+            name="description"
+            placeholder="Tell us about your special dish"
+            rows="3"
+            className="w-full p-3 sm:p-4 border border-gray-500 rounded-lg bg-transparent text-black placeholder-gray-500 focus:ring-2 focus:ring-[#d65e1d]"
             required
           ></textarea>
 
@@ -76,11 +119,14 @@ const Vendorsection = () => {
             <label className="block text-black mb-2 text-sm sm:text-base">
               Upload Dish Image
             </label>
-            <input 
-              type="file" 
-              accept="image/*" 
-              onChange={handleImageChange} 
-              className="w-full p-2 sm:p-3 border border-gray-500 rounded-lg bg-transparent text-black focus:ring-2 focus:ring-[#F17228] text-sm sm:text-base" 
+            <input
+              ref={fileInputRef}
+              name="dishImage"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="w-full p-2 sm:p-3 border border-gray-500 rounded-lg bg-transparent text-black focus:ring-2 focus:ring-[#F17228] text-sm sm:text-base"
+              required
             />
           </div>
 
@@ -88,10 +134,10 @@ const Vendorsection = () => {
             <div className="relative mt-4">
               <p className="text-gray-600 text-sm sm:text-base">Preview:</p>
               <div className="relative inline-block mt-2">
-                <img 
-                  src={selectedImage} 
-                  alt="Dish Preview" 
-                  className="w-full h-40 sm:h-48 object-cover rounded-lg shadow-lg border-2 border-gray-500" 
+                <img
+                  src={selectedImage}
+                  alt="Dish Preview"
+                  className="w-full h-40 sm:h-48 object-cover rounded-lg shadow-lg border-2 border-gray-500"
                 />
                 <button
                   type="button"
@@ -104,8 +150,8 @@ const Vendorsection = () => {
             </div>
           )}
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="w-full bg-[#F17228] text-white font-bold py-3 sm:py-4 rounded-lg hover:bg-[#d65e1d] transition-all shadow-lg hover:shadow-[#F17228]/50 text-sm sm:text-base"
           >
             Become a Partner

@@ -3,6 +3,7 @@ import { useCart } from "../AuthContext/CartContext";
 import { FiArrowRightCircle } from "react-icons/fi";
 import { BsFillGearFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import CustomMealChatbot from "../Components/CustomMealChatbot";
 
 const CartPage = () => {
@@ -13,9 +14,30 @@ const CartPage = () => {
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
+		fetchCartItems();
 	}, []);
 
-	const handleUpdateCart = () => navigate("/MealData");
+	const fetchCartItems = async () => {
+		try {
+		  const response = await axios.get("/api/cart"); 
+		  console.log(response.data); 
+		} catch (error) {
+		  console.error("Error fetching cart items:", error);
+		}
+	  };
+
+	  const handleUpdateCart = async () => {
+    try {
+      const response = await axios.post("/api/cart/update", {
+        title: "Meal Name", 
+        quantity: 2,
+      });
+      console.log("Updated Cart Item:", response.data);
+    } catch (error) {
+      console.error("Error updating cart item:", error);
+    }
+  };
+
 
 	const handleCustomizeMeal = (item) => {
 		setCustomMeal(item);

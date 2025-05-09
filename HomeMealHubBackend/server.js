@@ -5,7 +5,10 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import contactRoute from "./Route/contactRoute.js";
 import vendorRoute from "./Route/vendorRoute.js";
+import cartRoute from "./Route/cartRoute.js";
+import orderRoute from "./Route/orderRoute.js";
 import connectDB from "./Database/Connection.js";
+
 import { config } from "dotenv";
 
 
@@ -35,6 +38,8 @@ app.use(cookieParser());
 // Routes
 app.use("/api", contactRoute);
 app.use("/api/vendor", vendorRoute);
+app.use("/api/cart", cartRoute);
+app.use("/api/order", orderRoute);
 
 // Server start
 app.listen(PORT, () => {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useCart } from "../AuthContext/CartContext";
 import { useNavigate } from "react-router-dom";
 import QRCode from "react-qr-code";
+import axios from "axios";
 
 const CheckOutPage = () => {
   const { totalAmount, cartItems } = useCart();
@@ -24,7 +25,6 @@ const CheckOutPage = () => {
 
   const upiBankName = "Bank of Baroda";
   const upiId = "dipanshukale73@oksbi";
-
   const qrPayload = `upi://pay?pa=${upiId}&pn=${upiBankName}&am=${grandTotal.toFixed(2)}&cu=INR`;
 
   const handleChange = (e) => {
@@ -41,16 +41,30 @@ const CheckOutPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleProceed = () => {
-    // if (!validateForm()) return;
-      // setQrGenerated(true);
+  const handleProceed = async () => {
+    if (!validateForm()) return;
+
+    try {
+      await axios.post("http://localhost:5000/api/orders", {
+        ...userData,
+        cartItems,
+        totalAmount,
+        shipping,
+        gst,
+        grandTotal,
+      });
+
       navigate("/razorpay", {
-          state: {
-              customer: userData,
-              total: grandTotal,
-              cart: cartItems,
-          },
-  });
+        state: {
+          customer: userData,
+          total: grandTotal,
+          cart: cartItems,
+        },
+      });
+    } catch (error) {
+      console.error("Order submission failed:", error);
+      alert("Failed to place the order. Try again.");
+    }
   };
 
   const handleConfirmOrder = () => {
@@ -60,7 +74,7 @@ const CheckOutPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-100 to-white px-4 py-8">
-      <div className="max-w-4xl mx-auto bg-white  shadow-xs shadow-black rounded-xl p-6 sm:p-10 mt-6">
+      <div className="max-w-4xl mx-auto bg-white shadow-xs shadow-black rounded-xl p-6 sm:p-10 mt-6">
         <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-center text-[#F17228]">
           Checkout
         </h2>
@@ -138,7 +152,7 @@ const CheckOutPage = () => {
                 <p className="text-gray-700 font-medium mb-2">
                   Scan & Pay via <span className="font-bold">{upiBankName}</span> UPI
                 </p>
-                    <QRCode value={qrPayload} size={200} style={{ margin: "0 auto" }} />
+                <QRCode value={qrPayload} size={200} style={{ margin: "0 auto" }} />
                 <button
                   onClick={handleConfirmOrder}
                   className="mt-4 w-full bg-green-600 text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition"

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
-
+import { Link } from 'react-router-dom';
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   return (
     <>
@@ -9,7 +9,15 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         <ul className="space-y-4">
           <li className="hover:text-yellow-400 cursor-pointer">Dashboard</li>
           <li className="hover:text-yellow-400 cursor-pointer">Customers Orders</li>
-          <li className="hover:text-yellow-400 cursor-pointer">Vendor Customers</li>
+           <li>
+            <Link
+              to="/admin/vendors"
+              className="hover:text-yellow-400 block"
+              onClick={toggleSidebar}
+            >
+              Vendor Customers
+            </Link>
+          </li>
         </ul>
       </div>
 

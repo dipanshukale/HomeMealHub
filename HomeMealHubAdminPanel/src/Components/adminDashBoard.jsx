@@ -6,7 +6,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:8000/api/orders')
+      .get('http://localhost:8000/api/ orders')
       .then((res) => setOrders(res.data))
       .catch((err) => console.error('Error fetching orders:', err));
   }, []);

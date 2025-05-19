@@ -9,11 +9,14 @@ const AdminDashboard = () => {
       .get('http://localhost:8000/api/orders')
       .then((res) => setOrders(res.data))
       .catch((err) => console.error('Error fetching orders:', err));
-  }, []);
+  }, []);     
+
+
+  console.log(orders);
 
   return (
     <div className="p-4 mt-16 md:ml-64">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">Orders</h1>
+      <h1 className="text-3xl font-serif mb-6 text-gray-800">Orders</h1>
 
       <div className="w-full overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200 bg-white shadow-md rounded-lg">
@@ -80,7 +83,7 @@ const AdminDashboard = () => {
         </table>
 
         {orders.length === 0 && (
-          <p className="text-center text-gray-500 py-6">No orders found.</p>
+          <p className="text-center text-gray-500 py-6">Loading...</p>
         )}
       </div>
     </div>

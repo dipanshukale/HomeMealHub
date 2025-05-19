@@ -2,8 +2,7 @@ import express from "express";
 import multer from "multer";
 import cloudinary from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
-import Vendor from "../models/vendor.js";
-
+import Vendor from "../models/vendor.js"
 
 const router = express.Router();
 
@@ -48,6 +47,7 @@ const upload = multer({ storage: storage });
   // },
 // });
 
+
 router.post("/vendordata", upload.single("dishImage"), async (req, res) => {
   try {
 
@@ -55,23 +55,35 @@ router.post("/vendordata", upload.single("dishImage"), async (req, res) => {
     console.log("FILE : ", req.file);
 
     const { name, email, phone, description } = req.body;
-    const dishImage = req.file ? req.file.filename : null;
+    const result = await cloudinary.uploader.upload(req.file.path);
 
     const newVendor = new Vendor({
       name,
       email,
       phone,
       description,
-      dishImage,
+      dishImage: result.secure_url, 
     });
 
-    console.log(name);
+    console.log(newVendor);
 
     await newVendor.save();
     res.status(201).json({ message: "Vendor data saved successfully."});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to save vendor data." });
+  }
+});
+
+router.get("/data", async (req, res) => {
+  try {
+    const vendors = await Vendor.find();
+    res.json(vendors);
+    console.log("vendor data is here!")
+    console.log(vendors);
+  } catch (error) {
+    console.error('Error fetching vendor data:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 

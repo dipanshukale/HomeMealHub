@@ -20,5 +20,15 @@ router.post('/contact', async (req, res) => {
     res.status(500).json({ error: 'Server error. Try again later.' });
   }
 });
+router.get('/admin/contacts', async (req, res) => {
+  try {
+    const contacts = await Contact.find().sort({ date: -1 });
+    res.status(200).json(contacts);
+  } catch (error) {
+    console.error('Error fetching contact messages:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 
 export default router;

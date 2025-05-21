@@ -1,13 +1,30 @@
 import React, { useState } from 'react';
 import { UserCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const AdminNavbar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const navigate = useNavigate();
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
-    console.log('Searching for:', searchQuery);
+    if (!searchQuery.trim()) return;
+
+    try {
+      const res = await axios.get(`http://localhost:8000/api/admin/search?q=${searchQuery}`);
+      setSearchResults(res.data);
+    } catch (error) {
+      console.error('Search failed:', error);
+    }
+  };
+
+  const handleLogout = () => {
+    // Optional: clear auth token or session
+    localStorage.removeItem('adminToken');
+    navigate('/admin/login');
   };
 
   return (
@@ -19,9 +36,9 @@ const AdminNavbar = () => {
       </div>
 
       {/* Search Bar and Profile */}
-      <div className=" text-black-200 flex items-center space-x-6 relative w-full max-w-md justify-end">
+      <div className="text-black flex items-center space-x-6 relative w-full max-w-md justify-end">
         {/* Search Bar */}
-        <form onSubmit={handleSearch} className="w-full max-w-xs">
+        <form onSubmit={handleSearch} className="w-full max-w-xs relative">
           <input 
             type="text"
             placeholder="Search..."
@@ -29,6 +46,16 @@ const AdminNavbar = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm"
           />
+          {/* Search Results Dropdown */}
+          {searchResults.length > 0 && (
+            <div className="absolute top-12 left-0 w-full bg-white border rounded-lg shadow-md z-50 max-h-60 overflow-y-auto">
+              {searchResults.map((result, index) => (
+                <div key={index} className="p-2 hover:bg-gray-100 cursor-pointer">
+                  {result.name || result.subject || 'Unnamed Record'}
+                </div>
+              ))}
+            </div>
+          )}
         </form>
 
         {/* Profile Dropdown */}
@@ -43,9 +70,33 @@ const AdminNavbar = () => {
           {isDropdownOpen && (
             <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg z-50">
               <ul className="text-sm text-gray-700">
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Logout</li>
+                <li
+                  onClick={() => {
+                    navigate('/admin/profile');
+                    setDropdownOpen(false);
+                  }}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                >
+                  Profile
+                </li>
+                <li
+                  onClick={() => {
+                    navigate('/admin/settings');
+                    setDropdownOpen(false);
+                  }}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                >
+                  Settings
+                </li>
+                <li
+                  onClick={() => {
+                    navigate('/admin/settings');
+                    setDropdownOpen(false);
+                  }}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500"
+                >
+                  Logout
+                </li>
               </ul>
             </div>
           )}

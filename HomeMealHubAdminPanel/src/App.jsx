@@ -5,8 +5,7 @@ import Sidebar from './Components/sidebar';
 import AdminVendor from './Components/AdminVendor.jsx';
 import CustomerOrders from './Components/CustomerOrders.jsx';
 import AdminNavbar from './Components/Navbar.jsx';
-import AdminMenuAnalytics from './Components/AdminMenu.jsx';
-
+import AdminContact from './Components/AdminContact';
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -22,7 +21,7 @@ function App() {
             <Route path="/" element={<AdminDashBoard />} />
             <Route path ="/admin/customer" element={<CustomerOrders/>}/>
             <Route path="/admin/vendors" element={<AdminVendor/>}/>
-            <Route path="/admin/menu" element={<AdminMenuAnalytics/>}/>
+            <Route path="/admin/contacts" element={<AdminContact />} />
           </Routes>
         </div>
       </div>

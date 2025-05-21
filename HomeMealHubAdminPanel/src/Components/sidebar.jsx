@@ -1,4 +1,5 @@
-import { Menu, X, LayoutDashboard, Users, PackageCheck, PieChart } from 'lucide-react';
+import { Menu, X, LayoutDashboard, Users, PackageCheck, PieChart, ShoppingCart } from 'lucide-react';
+
 import { Link } from 'react-router-dom';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
@@ -27,7 +28,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               </Link>
             </li>
             <li className="flex items-center space-x-3">
-              <Users className="w-5 h-5 text-yellow-400" />
+              <ShoppingCart className="w-5 h-5 text-yellow-400" />
               <Link
                 to="/admin/customer"
                 className="hover:text-yellow-400"
@@ -46,14 +47,15 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                 Vendor
               </Link>
             </li>
-            <li className="flex items-center space-x-3">
-              <PieChart className="w-5 h-5 text-yellow-400" />
+            
+             <li className="flex items-center space-x-3">
+              <Users className="w-5 h-5 text-yellow-400" />
               <Link
-                to="/admin/menu-analytics"
+                to="/admin/contacts"
                 className="hover:text-yellow-400"
                 onClick={toggleSidebar}
               >
-                Menu
+                Contact
               </Link>
             </li>
           </ul>

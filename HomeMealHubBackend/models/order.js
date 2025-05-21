@@ -15,6 +15,11 @@ const orderSchema = new mongoose.Schema({
   shipping: Number,
   gst: Number,
   grandTotal: Number,
+ status: {
+    type: String,
+    default: "Pending",
+    enum: ["Pending", "Preparing", "Ready To Pick", "Out Of Delivery", "Delivered", "Cancelled"],
+  },
   createdAt: {
     type: Date,
     default: Date.now,

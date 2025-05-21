@@ -32,6 +32,28 @@ router.post("/checkoutOrder", async (req, res) => {
   }
 });
 
+router.put("/:orderId/status", async (req, res) => {
+  const { orderId } = req.params;
+  const { status } = req.body;
+
+  try {
+    const updatedOrder = await Order.findByIdAndUpdate(
+      orderId,
+      { status },
+      { new: true }
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    res.json(updatedOrder);
+  } catch (err) {
+    console.error("Error updating status:", err);
+    res.status(500).json({ error: "Failed to update status" });
+  }
+});
+
 router.get('/', async (req, res) => {
   try {
     const orders = await Order.find();

@@ -1,37 +1,66 @@
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LayoutDashboard, Users, PackageCheck, PieChart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   return (
     <>
+      {/* Sidebar Container */}
       <div
-        className={`md:flex flex-col bg-gray-800 text-white w-64 h-screen fixed z-50 top-0 left-0 p-10 transform ${
+        className={`fixed top-0 left-0 h-full w-64 bg-gray-800 text-white z-50 transform transition-transform duration-300 md:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
-        } transition-transform duration-300 md:translate-x-0`}
+        } md:flex md:flex-col p-6`}
       >
-        <h2 className="text-2xl font-stretch-50% mb-16">Admin Panel</h2>
-        <ul className="space-y-4">
-          <li>
-            <Link
-              to="/"
-              className="hover:text-yellow-400 cursor-pointer"
-              onClick={toggleSidebar}
-            >
-              Customers Orders
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/admin/vendors"
-              className="hover:text-yellow-400 cursor-pointer"
-              onClick={toggleSidebar}
-            >
-              Vendor Customers
-            </Link>
-          </li>
-        </ul>
+        {/* Sidebar Header */}
+        <h2 className="text-2xl font-bold mb-10">Admin Panel</h2>
+
+        {/* Navigation Links */}
+        <nav>
+          <ul className="space-y-6 text-base">
+            <li className="flex items-center space-x-3">
+              <LayoutDashboard className="w-5 h-5 text-yellow-400" />
+              <Link
+                to="/"
+                className="hover:text-yellow-400"
+                onClick={toggleSidebar}
+              >
+                Dashboard
+              </Link>
+            </li>
+            <li className="flex items-center space-x-3">
+              <Users className="w-5 h-5 text-yellow-400" />
+              <Link
+                to="/admin/customer"
+                className="hover:text-yellow-400"
+                onClick={toggleSidebar}
+              >
+                Orders
+              </Link>
+            </li>
+            <li className="flex items-center space-x-3">
+              <PackageCheck className="w-5 h-5 text-yellow-400" />
+              <Link
+                to="/admin/vendors"
+                className="hover:text-yellow-400"
+                onClick={toggleSidebar}
+              >
+                Vendor
+              </Link>
+            </li>
+            <li className="flex items-center space-x-3">
+              <PieChart className="w-5 h-5 text-yellow-400" />
+              <Link
+                to="/admin/menu-analytics"
+                className="hover:text-yellow-400"
+                onClick={toggleSidebar}
+              >
+                Menu
+              </Link>
+            </li>
+          </ul>
+        </nav>
       </div>
 
+      {/* Toggle Button for Mobile */}
       <div className="md:hidden fixed top-4 left-4 z-50">
         <button onClick={toggleSidebar}>
           {isOpen ? (

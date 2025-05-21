@@ -1,90 +1,110 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Users, Truck, ShoppingCart, DollarSign } from 'lucide-react';
 
 const AdminDashboard = () => {
-  const [orders, setOrders] = useState([]);
+  const [customerCount, setCustomerCount] = useState(0);
+  const [vendorCount, setVendorCount] = useState(0);
+  const [orderCount, setOrderCount] = useState(0);
+  const [revenue, setRevenue] = useState(0);
+  const [recentOrders, setRecentOrders] = useState([]);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:8000/api/orders')
-      .then((res) => setOrders(res.data))
-      .catch((err) => console.error('Error fetching orders:', err));
-  }, []);     
+  
+    axios.get('http://localhost:8000/api/vendor/data')
+      .then(res => setVendorCount(res.data.length))
+      .catch(err => console.error('Error fetching vendors:', err));
 
-
-  console.log(orders);
+    axios.get('http://localhost:8000/api/orders')
+      .then(res => {
+        setOrderCount(res.data.length);
+        setCustomerCount(res.data.length);
+        setRecentOrders(res.data.slice(-5).reverse()); // Get latest 5
+        const total = res.data.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+        setRevenue(total);
+      })
+      .catch(err => console.error('Error fetching orders:', err));
+  }, []);
 
   return (
-    <div className="p-4 mt-16 md:ml-64">
-      <h1 className="text-3xl font-serif mb-6 text-gray-800">Orders</h1>
+    <div className="ml-0 md:ml-64 p-6 pt-24 min-h-screen bg-gray-100">
+      <h1 className="text-3xl font-semibold mb-6">Admin Dashboard</h1>
 
-      <div className="w-full overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 bg-white shadow-md rounded-lg">
-          <thead className="bg-gray-100 text-sm text-gray-700">
-            <tr>
-              <th className="px-4 py-3 text-left">Order ID</th>
-              <th className="px-4 py-3 text-left">Customer Name</th>
-              <th className="px-4 py-3 text-left">Phone</th>
-              <th className="px-4 py-3 text-left">Address</th>
-              <th className="px-4 py-3 text-left">Total</th>
-              <th className="px-4 py-3 text-left">Shipping</th>
-              <th className="px-4 py-3 text-left">GST</th>
-              <th className="px-4 py-3 text-left">Grand Total</th>
-              <th className="px-4 py-3 text-left">Created At</th>
-              <th className="px-4 py-3 text-left">Cart Items</th>
-            </tr>
-          </thead>
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="bg-white p-6 rounded-xl shadow-md flex items-center space-x-4">
+          <Users size={40} className="text-blue-600" />
+          <div>
+            <h2 className="text-xl font-semibold">Customers</h2>
+            <p className="text-3xl font-bold text-blue-600">{customerCount}</p>
+          </div>
+        </div>
 
-          <tbody className="divide-y divide-gray-100 text-sm">
-            {orders.map((order) => (
-              <tr key={order._id} className="hover:bg-gray-50 transition">
-                <td className="px-4 py-3 break-all">{order._id}</td>
-                <td className="px-4 py-3">{order.name}</td>
-                <td className="px-4 py-3">{order.phone}</td>
-                <td className="px-4 py-3 max-w-xs break-words">{order.address}</td>
-                <td className="px-4 py-3 whitespace-nowrap">₹{order.totalAmount}</td>
-                <td className="px-4 py-3 whitespace-nowrap">₹{order.shipping}</td>
-                <td className="px-4 py-3 whitespace-nowrap">₹{order.gst}</td>
-                <td className="px-4 py-3 whitespace-nowrap font-semibold text-green-700">
-                  ₹{order.grandTotal}
-                </td>
-                <td className="px-4 py-3">
-                  {new Date(order.createdAt).toLocaleString()}
-                </td>
-                <td className="px-4 py-3">
-                  {order.cartItems && order.cartItems.length > 0 ? (
-                    <div className="max-h-40 overflow-y-auto border rounded bg-gray-50 p-2">
-                      <table className="w-full text-xs">
-                        <thead>
-                          <tr className="text-gray-600">
-                            <th className="text-left p-1">Title</th>
-                            <th className="text-left p-1">Qty</th>
-                            <th className="text-left p-1">Price</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {order.cartItems.map((item, idx) => (
-                            <tr key={idx}>
-                              <td className="p-1">{item.title}</td>
-                              <td className="p-1">{item.quantity}</td>
-                              <td className="p-1">₹{item.price}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  ) : (
-                    <span className="text-gray-500">No items</span>
-                  )}
-                </td>
+        <div className="bg-white p-6 rounded-xl shadow-md flex items-center space-x-4">
+          <Truck size={40} className="text-green-600" />
+          <div>
+            <h2 className="text-xl font-semibold">Vendors</h2>
+            <p className="text-3xl font-bold text-green-600">{vendorCount}</p>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-md flex items-center space-x-4">
+          <ShoppingCart size={40} className="text-purple-600" />
+          <div>
+            <h2 className="text-xl font-semibold">Orders</h2>
+            <p className="text-3xl font-bold text-purple-600">{orderCount}</p>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-md flex items-center space-x-4">
+          <DollarSign size={40} className="text-yellow-500" />
+          <div>
+            <h2 className="text-xl font-semibold">Total Revenue</h2>
+            <p className="text-3xl font-bold text-yellow-500">₹{revenue}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Orders */}
+      <div className="bg-white p-6 rounded-xl shadow-md">
+        <h2 className="text-xl font-semibold mb-4">Recent Orders</h2>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200 text-sm">
+            <thead className="bg-gray-50 text-gray-700">
+              <tr>
+                <th className="px-4 py-2 text-left font-semibold">Order ID</th>
+                <th className="px-4 py-2 text-left font-semibold">Customer</th>
+                <th className="px-4 py-2 text-left font-semibold">Total (₹)</th>
+                <th className="px-4 py-2 text-left font-semibold">Status</th>
+                <th className="px-4 py-2 text-left font-semibold">Date</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {orders.length === 0 && (
-          <p className="text-center text-gray-500 py-6">Loading...</p>
-        )}
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {recentOrders.map((order) => (
+                <tr key={order._id} className="hover:bg-gray-50">
+                  <td className="px-4 py-2">{order._id}</td>
+                  <td className="px-4 py-2">{order.name || 'N/A'}</td>
+                  <td className="px-4 py-2">₹{order.totalAmount || 0}</td>
+                  <td className="px-4 py-2">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      order.status === 'Delivered' ? 'bg-green-100 text-green-600' :
+                      order.status === 'Pending' ? 'bg-yellow-100 text-yellow-600' :
+                      'bg-red-100 text-red-600'
+                    }`}>
+                      {order.status || 'Pending'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2">
+                    {new Date(order.createdAt).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {recentOrders.length === 0 && (
+            <p className="text-gray-500 py-4">No recent orders found.</p>
+          )}
+        </div>
       </div>
     </div>
   );

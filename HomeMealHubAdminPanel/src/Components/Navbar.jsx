@@ -22,8 +22,8 @@ const AdminNavbar = () => {
   };
 
   const handleLogout = () => {
-    // Optional: clear auth token or session
     localStorage.removeItem('adminToken');
+    setDropdownOpen(false);
     navigate('/admin/login');
   };
 
@@ -39,7 +39,7 @@ const AdminNavbar = () => {
       <div className="text-black flex items-center space-x-6 relative w-full max-w-md justify-end">
         {/* Search Bar */}
         <form onSubmit={handleSearch} className="w-full max-w-xs relative">
-          <input 
+          <input
             type="text"
             placeholder="Search..."
             value={searchQuery}
@@ -50,8 +50,27 @@ const AdminNavbar = () => {
           {searchResults.length > 0 && (
             <div className="absolute top-12 left-0 w-full bg-white border rounded-lg shadow-md z-50 max-h-60 overflow-y-auto">
               {searchResults.map((result, index) => (
-                <div key={index} className="p-2 hover:bg-gray-100 cursor-pointer">
-                  {result.name || result.subject || 'Unnamed Record'}
+                <div
+                  key={index}
+                  onClick={() => {
+                    if (result.type === 'order') {
+                      navigate(`/admin/orders/${result._id}`);
+                    } else if (result.type === 'customer') {
+                      navigate(`/admin/customers/${result._id}`);
+                    } else if (result.type === 'vendor') {
+                      navigate(`/admin/vendors/${result._id}`);
+                    } else if (result.type === 'menu') {
+                      navigate(`/admin/menu/${result._id}`);
+                    } else if (result.type === 'contact') {
+                      navigate(`/admin/contacts/${result._id}`);
+                    }
+                    setSearchResults([]);
+                    setSearchQuery('');
+                  }}
+                  className="p-2 hover:bg-gray-100 cursor-pointer border-b text-sm"
+                >
+                  <span className="font-semibold text-gray-800">{result.name || result.subject || 'Unnamed'}</span>
+                  <span className="text-xs text-gray-500 block">{result.type?.toUpperCase()}</span>
                 </div>
               ))}
             </div>
@@ -79,20 +98,9 @@ const AdminNavbar = () => {
                 >
                   Profile
                 </li>
+               
                 <li
-                  onClick={() => {
-                    navigate('/admin/settings');
-                    setDropdownOpen(false);
-                  }}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                >
-                  Settings
-                </li>
-                <li
-                  onClick={() => {
-                    navigate('/admin/settings');
-                    setDropdownOpen(false);
-                  }}
+                  onClick={handleLogout}
                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500"
                 >
                   Logout

@@ -14,13 +14,11 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
-  // PrivateRoute now reads inside its scope
   const PrivateRoute = ({ children }) => {
     const isAuthenticated = localStorage.getItem('adminToken');
     return isAuthenticated ? children : <Navigate to="/admin/login" replace />;
   };
 
-  // For root redirect, check auth status
   const isAuthenticated = localStorage.getItem('adminToken');
 
   return (
@@ -30,11 +28,9 @@ function App() {
         {isAuthenticated && <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />}
         <div className="flex-1 bg-gray-100">
           <Routes>
-            {/* Public Routes */}
+           
             <Route path="/admin/register" element={<AdminRegister />} />
             <Route path="/admin/login" element={<AdminLogin />} />
-
-            {/* Root redirect based on auth */}
             <Route
               path="/"
               element={
@@ -46,7 +42,6 @@ function App() {
               }
             />
 
-            {/* Protected Routes */}
             <Route
               path="/admin/dashboard"
               element={

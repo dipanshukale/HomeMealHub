@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Users, Truck, ShoppingCart, DollarSign, Clock } from "lucide-react";
+import {
+  Users,
+  Truck,
+  ShoppingCart,
+  DollarSign,
+  Clock,
+} from "lucide-react";
 
 const statusColors = {
   Delivered: "bg-green-100 text-green-700",
@@ -28,7 +34,7 @@ const AdminDashboard = () => {
       .then((res) => {
         setOrderCount(res.data.length);
         setCustomerCount(res.data.length);
-        setRecentOrders(res.data.slice(-5).reverse()); // Latest 5 orders
+        setRecentOrders(res.data.slice(-5).reverse());
         const total = res.data.reduce(
           (sum, order) => sum + (order.totalAmount || 0),
           0
@@ -44,32 +50,36 @@ const AdminDashboard = () => {
         Admin Dashboard
       </h1>
 
-      {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-        {[{
-          title: "Customers",
-          count: customerCount,
-          icon: <Users size={40} className="text-blue-600" />,
-          bg: "from-blue-400 to-blue-600",
-        }, {
-          title: "Vendors",
-          count: vendorCount,
-          icon: <Truck size={40} className="text-green-600" />,
-          bg: "from-green-400 to-green-600",
-        }, {
-          title: "Orders",
-          count: orderCount,
-          icon: <ShoppingCart size={40} className="text-purple-600" />,
-          bg: "from-purple-400 to-purple-600",
-        }, {
-          title: "Total Revenue",
-          count: `₹${revenue.toLocaleString()}`,
-          icon: <DollarSign size={40} className="text-yellow-500" />,
-          bg: "from-yellow-400 to-yellow-600",
-        }].map(({ title, count, icon, bg }) => (
+        {[
+          {
+            title: "Customers",
+            count: customerCount,
+            icon: <Users size={40} className="text-white" />,
+            bg: "bg-blue-500",
+          },
+          {
+            title: "Vendors",
+            count: vendorCount,
+            icon: <Truck size={40} className="text-white" />,
+            bg: "bg-green-500",
+          },
+          {
+            title: "Orders",
+            count: orderCount,
+            icon: <ShoppingCart size={40} className="text-white" />,
+            bg: "bg-purple-500",
+          },
+          {
+            title: "Total Revenue",
+            count: `₹${revenue.toLocaleString()}`,
+            icon: <DollarSign size={40} className="text-white" />,
+            bg: "bg-yellow-500",
+          },
+        ].map(({ title, count, icon, bg }) => (
           <div
             key={title}
-            className={`bg-gradient-to-r ${bg} rounded-xl shadow-lg p-6 flex items-center space-x-5 text-white transform transition hover:scale-[1.03]`}
+            className={`rounded-xl shadow-lg p-6 flex items-center space-x-5 text-white transform transition hover:scale-105 ${bg}`}
           >
             <div className="p-4 bg-white/20 rounded-full">{icon}</div>
             <div>
@@ -80,7 +90,6 @@ const AdminDashboard = () => {
         ))}
       </div>
 
-      {/* Recent Orders */}
       <section className="bg-white rounded-xl shadow-lg p-6">
         <div className="flex items-center mb-6 space-x-3">
           <Clock size={28} className="text-indigo-600" />
@@ -99,7 +108,7 @@ const AdminDashboard = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {recentOrders.length === 0 && (
+              {recentOrders.length === 0 ? (
                 <tr>
                   <td
                     colSpan={5}
@@ -108,39 +117,40 @@ const AdminDashboard = () => {
                     No recent orders found.
                   </td>
                 </tr>
+              ) : (
+                recentOrders.map((order) => (
+                  <tr
+                    key={order._id}
+                    className="hover:bg-indigo-50 cursor-pointer transition"
+                    title={`Order ${order._id}`}
+                  >
+                    <td className="px-6 py-3 font-mono truncate max-w-[120px]">
+                      {order._id}
+                    </td>
+                    <td className="px-6 py-3">{order.name || "N/A"}</td>
+                    <td className="px-6 py-3 font-semibold text-indigo-700">
+                      ₹{order.totalAmount?.toLocaleString() || "0"}
+                    </td>
+                    <td className="px-6 py-3">
+                      <span
+                        className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
+                          statusColors[order.status] ||
+                          "bg-gray-200 text-gray-700"
+                        }`}
+                      >
+                        {order.status || "Pending"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-3 whitespace-nowrap">
+                      {new Date(order.createdAt).toLocaleDateString("en-IN", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </td>
+                  </tr>
+                ))
               )}
-              {recentOrders.map((order) => (
-                <tr
-                  key={order._id}
-                  className="hover:bg-indigo-50 cursor-pointer transition"
-                  title={`Order ${order._id}`}
-                >
-                  <td className="px-6 py-3 font-mono truncate max-w-[120px]">
-                    {order._id}
-                  </td>
-                  <td className="px-6 py-3">{order.name || "N/A"}</td>
-                  <td className="px-6 py-3 font-semibold text-indigo-700">
-                    ₹{order.totalAmount?.toLocaleString() || "0"}
-                  </td>
-                  <td className="px-6 py-3">
-                    <span
-                      className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                        statusColors[order.status] ||
-                        "bg-gray-200 text-gray-700"
-                      }`}
-                    >
-                      {order.status || "Pending"}
-                    </span>
-                  </td>
-                  <td className="px-6 py-3 whitespace-nowrap">
-                    {new Date(order.createdAt).toLocaleDateString("en-IN", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </td>
-                </tr>
-              ))}
             </tbody>
           </table>
         </div>

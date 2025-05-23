@@ -73,7 +73,7 @@ const CustomerOrders = () => {
 
   return (
     <div className="ml-0 md:ml-64 min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8 transition-all duration-300">
-      {/* Top Summary Cards */}
+     
        <h1 className="text-4xl font-extrabold text-orange-600 mb-10  mt-19 flex items-center justify-center sm:justify-start gap-3 drop-shadow-lg">
         <ShoppingCart size={48} className="text-orange-500" />
         Customer Orders

@@ -9,7 +9,6 @@ const AdminProfile = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Fetch admin profile on mount
   useEffect(() => {
     fetchAdminProfile();
   }, []);
@@ -30,7 +29,6 @@ const AdminProfile = () => {
     } catch (error) {
       console.error('Failed to fetch profile:', error);
       setError('Failed to load profile. Please try again.');
-      // Redirect only if unauthorized
       if (error.response?.status === 401) {
         navigate('/admin/login');
       }
@@ -39,7 +37,6 @@ const AdminProfile = () => {
     }
   };
 
-  // Logout handler
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
     navigate('/admin/login');
@@ -47,7 +44,7 @@ const AdminProfile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-yellow-100 via-orange-100 to-pink-100">
+      <div className="min-h-screen flex items-center justify-center bg-white">
         <p className="text-gray-700 text-lg flex items-center gap-2">
           Loading profile...
           <svg
@@ -55,7 +52,6 @@ const AdminProfile = () => {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            aria-label="Loading spinner"
           >
             <circle
               className="opacity-25"
@@ -78,12 +74,11 @@ const AdminProfile = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-yellow-100 via-orange-100 to-pink-100 px-4">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4">
         <p className="text-red-500 text-lg mb-4">{error}</p>
         <button
           onClick={fetchAdminProfile}
           className="bg-orange-400 hover:bg-orange-500 text-white py-2 px-6 rounded-full font-semibold shadow-lg transition"
-          aria-label="Retry loading profile"
         >
           Retry
         </button>
@@ -93,16 +88,20 @@ const AdminProfile = () => {
 
   if (!admin) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-yellow-100 via-orange-100 to-pink-100">
+      <div className="min-h-screen flex items-center justify-center bg-white">
         <p className="text-red-500 text-lg">Failed to load profile.</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-yellow-100 via-orange-100 to-pink-100 px-4">
-      <div className="bg-white bg-opacity-80 backdrop-blur-sm rounded-3xl shadow-lg p-10 max-w-md w-full">
-        <h1 className="text-3xl font-bold text-center text-orange-600 mb-8">Admin Profile</h1>
+    <div className="min-h-screen flex items-center justify-center ml-70 bg-white px-4 py-10">
+      <div className="bg-gradient-to-br from-orange-50 via-pink-50 to-yellow-50 border border-orange-100 rounded-3xl shadow-2xl p-10 max-w-md w-full">
+        <div className="w-24 h-24 bg-gradient-to-br from-orange-300 to-pink-300 rounded-full flex items-center justify-center text-white text-4xl font-bold mx-auto mb-6 shadow-lg">
+          {admin.name?.charAt(0).toUpperCase()}
+        </div>
+
+        <h1 className="text-3xl font-bold text-center text-orange-600 mb-6">Admin Profile</h1>
 
         <ProfileItem icon={<FaUser className="text-orange-500" />} label="Name" value={admin.name} />
         <ProfileItem icon={<FaEnvelope className="text-orange-500" />} label="Email" value={admin.email} />
@@ -110,8 +109,7 @@ const AdminProfile = () => {
 
         <button
           onClick={handleLogout}
-          className="mt-8 w-full flex items-center justify-center gap-3 bg-gradient-to-r from-orange-400 to-pink-500 text-white py-3 rounded-full font-semibold shadow-lg hover:scale-105 transition-transform"
-          aria-label="Logout"
+          className="mt-8 w-full flex items-center justify-center gap-2 bg-gradient-to-r from-orange-400 to-pink-500 text-white py-3 rounded-full font-semibold shadow-md hover:scale-105 transition-transform duration-200"
         >
           <FaSignOutAlt />
           Logout
@@ -122,11 +120,11 @@ const AdminProfile = () => {
 };
 
 const ProfileItem = ({ icon, label, value }) => (
-  <div className="flex items-center gap-4 mb-6">
-    <div className="text-xl" aria-hidden="true">{icon}</div>
+  <div className="flex items-center gap-4 mb-5">
+    <div className="text-2xl">{icon}</div>
     <div>
-      <div className="text-gray-500 text-sm">{label}</div>
-      <div className="font-medium text-gray-800">{value}</div>
+      <p className="text-gray-500 text-sm">{label}</p>
+      <p className="text-gray-800 font-semibold">{value}</p>
     </div>
   </div>
 );

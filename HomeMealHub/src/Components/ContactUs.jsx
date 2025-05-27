@@ -17,7 +17,7 @@ const ContactUs = () => {
 		const formParams = new URLSearchParams(formData).toString();
 
 		try {
-			const res = await fetch("http://localhost:8000/api/contact", {
+			const res = await fetch("https://homemealhub-backend.onrender.com/api/contact", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded",

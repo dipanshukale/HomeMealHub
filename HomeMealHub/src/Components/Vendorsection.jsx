@@ -50,7 +50,7 @@ const Vendorsection = () => {
 		formData.append("dishImage", selectedFile);
 
 		try {
-			const res = await fetch("http://localhost:8000/api/vendor/vendordata", {
+			const res = await fetch("https://homemealhub-backend.onrender.com/api/vendor/vendordata", {
 				method: "POST",
 				body: formData,
 			});

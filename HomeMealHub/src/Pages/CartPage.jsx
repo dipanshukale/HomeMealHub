@@ -19,7 +19,7 @@ const CartPage = () => {
 
 	const fetchCartItems = async () => {
 		try {
-		  const response = await axios.get("/api/cart"); 
+		  const response = await axios.get("https://homemealhub-backend.onrender.com/api/cart"); 
 		  console.log(response.data); 
 		} catch (error) {
 		  console.error("Error fetching cart items:", error);
@@ -28,7 +28,7 @@ const CartPage = () => {
 
 	  const handleUpdateCart = async () => {
     try {
-      const response = await axios.post("/api/cart/update", {
+      const response = await axios.post("https://homemealhub-backend.onrender.com/api/cart/update", {
         title: "Meal Name", 
         quantity: 2,
       });

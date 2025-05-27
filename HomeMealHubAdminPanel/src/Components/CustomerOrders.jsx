@@ -48,7 +48,7 @@ const CustomerOrders = () => {
   // Fetch orders from backend
   const fetchOrders = () => {
     axios
-      .get("http://localhost:8000/api/orders")
+      .get("https://homemealhub-backend.onrender.com/api/orders")
       .then((res) => {
         setOrders(res.data);
       })
@@ -61,7 +61,7 @@ const CustomerOrders = () => {
 
   const updateOrderStatus = (orderId, newStatus) => {
     axios
-      .put(`http://localhost:8000/api/orders/${orderId}/status`, { status: newStatus })
+      .put(`https://homemealhub-backend.onrender.com/api/orders/${orderId}/status`, { status: newStatus })
       .then(() => {
         fetchOrders();
       })

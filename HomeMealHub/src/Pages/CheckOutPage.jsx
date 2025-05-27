@@ -13,6 +13,7 @@ const CheckOutPage = () => {
   });
   const [errors, setErrors] = useState({});
   const [qrGenerated, setQrGenerated] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,7 +26,9 @@ const CheckOutPage = () => {
 
   const upiBankName = "Bank of Baroda";
   const upiId = "dipanshukale73@oksbi";
-  const qrPayload = `upi://pay?pa=${upiId}&pn=${upiBankName}&am=${grandTotal.toFixed(2)}&cu=INR`;
+  const qrPayload = `upi://pay?pa=${upiId}&pn=${upiBankName}&am=${grandTotal.toFixed(
+    2
+  )}&cu=INR`;
 
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -35,7 +38,8 @@ const CheckOutPage = () => {
     const newErrors = {};
     if (!userData.name.trim()) newErrors.name = "Name is required";
     if (!userData.phone.trim()) newErrors.phone = "Phone is required";
-    else if (!/^\d{10}$/.test(userData.phone)) newErrors.phone = "Invalid phone";
+    else if (!/^\d{10}$/.test(userData.phone))
+      newErrors.phone = "Invalid phone";
     if (!userData.address.trim()) newErrors.address = "Address is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -44,15 +48,19 @@ const CheckOutPage = () => {
   const handleProceed = async () => {
     if (!validateForm()) return;
 
+    setLoading(true); // Start loader
     try {
-      await axios.post("https://homemealhub-backend.onrender.com/api/orders/checkoutOrder", {
-        ...userData,
-        cartItems,
-        totalAmount,
-        shipping,
-        gst,
-        grandTotal,
-      });
+      await axios.post(
+        "https://homemealhub-backend.onrender.com/api/orders/checkoutOrder",
+        {
+          ...userData,
+          cartItems,
+          totalAmount,
+          shipping,
+          gst,
+          grandTotal,
+        }
+      );
 
       navigate("/razorpay", {
         state: {
@@ -62,7 +70,9 @@ const CheckOutPage = () => {
         },
       });
     } catch (error) {
-      alert("Your Cart Is Empty please select first Your Delicious Food!.");// i have to use toast notification here!
+      alert("Your Cart Is Empty, please select your delicious food first!");
+    } finally {
+      setLoading(false); // Stop loader
     }
   };
 
@@ -80,7 +90,9 @@ const CheckOutPage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div>
-            <h3 className="text-xl font-semibold mb-4 text-gray-700">Customer Details</h3>
+            <h3 className="text-xl font-semibold mb-4 text-gray-700">
+              Customer Details
+            </h3>
             <div className="space-y-4">
               <div>
                 <input
@@ -91,7 +103,9 @@ const CheckOutPage = () => {
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm"
                 />
-                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                {errors.name && (
+                  <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+                )}
               </div>
               <div>
                 <input
@@ -102,7 +116,9 @@ const CheckOutPage = () => {
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm"
                 />
-                {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
+                {errors.phone && (
+                  <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+                )}
               </div>
               <div>
                 <textarea
@@ -113,19 +129,50 @@ const CheckOutPage = () => {
                   rows={4}
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm"
                 />
-                {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
+                {errors.address && (
+                  <p className="text-red-500 text-xs mt-1">{errors.address}</p>
+                )}
               </div>
               <button
                 onClick={handleProceed}
-                className="w-full bg-gradient-to-r cursor-pointer from-[#F17228] to-[#f38b34] text-white py-2 rounded-lg font-semibold hover:scale-105 transition"
+                className="w-full bg-gradient-to-r cursor-pointer from-[#F17228] to-[#f38b34] text-white py-2 rounded-lg font-semibold hover:scale-105 transition flex justify-center items-center"
+                disabled={loading}
               >
-                Proceed to Payment
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                      />
+                    </svg>
+                    Processing...
+                  </span>
+                ) : (
+                  "Proceed to Payment"
+                )}
               </button>
             </div>
           </div>
 
           <div className="bg-gray-50 p-6 rounded-xl border">
-            <h3 className="text-xl font-semibold mb-4 text-gray-700">Order Summary</h3>
+            <h3 className="text-xl font-semibold mb-4 text-gray-700">
+              Order Summary
+            </h3>
             <div className="space-y-2 text-sm text-gray-600">
               <div className="flex justify-between">
                 <span>Subtotal</span>
@@ -149,7 +196,8 @@ const CheckOutPage = () => {
             {qrGenerated && (
               <div className="mt-6 text-center">
                 <p className="text-gray-700 font-medium mb-2">
-                  Scan & Pay via <span className="font-bold">{upiBankName}</span> UPI
+                  Scan & Pay via{" "}
+                  <span className="font-bold">{upiBankName}</span> UPI
                 </p>
                 <QRCode value={qrPayload} size={200} style={{ margin: "0 auto" }} />
                 <button

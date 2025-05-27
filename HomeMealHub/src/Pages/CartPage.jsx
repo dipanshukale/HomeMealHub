@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useCart } from "../AuthContext/CartContext";
 import { FiArrowRightCircle } from "react-icons/fi";
 import { BsFillGearFill } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import axios from "axios";
 import CustomMealChatbot from "../Components/CustomMealChatbot";
 
@@ -62,12 +62,12 @@ const CartPage = () => {
 					<p className="text-gray-500 mb-6 text-sm sm:text-base">
 						Looks like you're hungry. Let’s fix that! 🍽️
 					</p>
-					<a
-						href="/MealData"
+					<button
+						onClick={() => navigate("/MealData")}
 						className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#F17228] to-[#f38b34] text-white rounded-full font-semibold text-sm sm:text-lg shadow-lg hover:scale-105 transition"
 					>
 						🍔 <span>Explore Meals</span>
-					</a>
+					</button>
 				</div>
 			</div>
 		);

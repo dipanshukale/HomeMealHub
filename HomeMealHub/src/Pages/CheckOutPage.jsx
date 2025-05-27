@@ -45,7 +45,7 @@ const CheckOutPage = () => {
     if (!validateForm()) return;
 
     try {
-      await axios.post("http://localhost:8000/api/orders/checkoutOrder", {
+      await axios.post("https://homemealhub-backend.onrender.com/api/orders/checkoutOrder", {
         ...userData,
         cartItems,
         totalAmount,

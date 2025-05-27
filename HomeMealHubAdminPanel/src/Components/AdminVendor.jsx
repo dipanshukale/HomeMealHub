@@ -5,7 +5,7 @@ const AdminVendor = () => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/vendor/data")
+    fetch("https://homemealhub-backend.onrender.com/api/vendor/data")
       .then((response) => {
         if (!response.ok) throw new Error("Failed to fetch vendor data");
         return response.json();
@@ -75,8 +75,8 @@ const AdminVendor = () => {
       </div>
 
       {selectedImage && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-opacity-80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[80vh] overflow-y-auto">
             <button
               onClick={() => setSelectedImage(null)}
               className="absolute top-3 right-3 text-white bg-red-500 hover:bg-red-600 rounded-full w-8 h-8 flex items-center justify-center shadow-lg"

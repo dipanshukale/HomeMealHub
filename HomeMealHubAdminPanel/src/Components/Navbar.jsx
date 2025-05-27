@@ -14,7 +14,7 @@ const AdminNavbar = () => {
     if (!searchQuery.trim()) return;
 
     try {
-      const res = await axios.get(`http://localhost:8000/api/admin/search?q=${searchQuery}`);
+      const res = await axios.get(`https://homemealhub-backend.onrender.com/api/admin/search?q=${searchQuery}`);
       setSearchResults(res.data);
     } catch (error) {
       console.error('Search failed:', error);

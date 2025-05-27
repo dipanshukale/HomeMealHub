@@ -22,7 +22,7 @@ const AdminProfile = () => {
       return;
     }
     try {
-      const res = await axios.get('http://localhost:8000/api/admin/profile', {
+      const res = await axios.get('https://homemealhub-backend.onrender.com/api/admin/profile', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setAdmin(res.data.admin);

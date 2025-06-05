@@ -9,9 +9,9 @@ const Footer = () => {
         <div>
           <h3 className="text-lg font-semibold text-white">MENU</h3>
           <ul className="mt-4 space-y-2 text-gray-400">
-            <li><a href="/MenuPage" className="hover:text-[#F17228] transition">View Menu</a></li>
+            <li><a href="/MealData" className="hover:text-[#F17228] transition">View Menu</a></li>
             <li><a href="/offers" className="hover:text-[#F17228] transition">Special Offers</a></li>
-            <li><a href="/about" className="hover:text-[#F17228] transition">About Us</a></li>
+            <li><a href="/AboutUs" className="hover:text-[#F17228] transition">About Us</a></li>
             <li><a href="/nutrition" className="hover:text-[#F17228] transition">Nutrition Info</a></li>
           </ul>
         </div>
@@ -20,7 +20,7 @@ const Footer = () => {
           <ul className="mt-4 space-y-2 text-gray-400">
             <li><a href="/support" className="hover:text-[#F17228] transition">Help & Support</a></li>
             <li><a href="/track-order" className="hover:text-[#F17228] transition">Track My Order</a></li>
-            <li><a href="/contact" className="hover:text-[#F17228] transition">Contact Us</a></li>
+            <li><a href="/ContactUs" className="hover:text-[#F17228] transition">Contact Us</a></li>
           </ul>
         </div>
         <div>

@@ -21,7 +21,7 @@ const AdminLogin = () => {
     e.preventDefault();
     setError('');
     try {
-      const res = await axios.post('https://homemealhub-backend.onrender.com/api/admin/login', {
+      const res = await axios.post('http://localhost:8000/api/admin/login', {
         email,
         password,
       });

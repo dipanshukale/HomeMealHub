@@ -11,7 +11,7 @@ const AdminContact = () => {
 
   const fetchMessages = async () => {
     try {
-      const res = await axios.get('https://homemealhub-backend.onrender.com/api/admin/contacts');
+      const res = await axios.get('http://localhost:8000/api/admin/contacts');
       setMessages(res.data);
     } catch (err) {
       console.error('Error fetching contact messages:', err);

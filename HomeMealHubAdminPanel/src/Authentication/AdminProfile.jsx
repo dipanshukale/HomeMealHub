@@ -21,9 +21,11 @@ const AdminProfile = () => {
       navigate('/admin/login');
       return;
     }
+
     try {
-      const res = await axios.get('https://homemealhub-backend.onrender.com/api/admin/profile', {
+      const res = await axios.get('http://localhost:8000/api/admin/profile', {
         headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       });
       setAdmin(res.data.admin);
     } catch (error) {
@@ -95,13 +97,15 @@ const AdminProfile = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center ml-70 bg-white px-4 py-10">
+    <div className="min-h-screen flex items-center justify-center ml-0 md:ml-64 bg-white px-4 py-10">
       <div className="bg-gradient-to-br from-orange-50 via-pink-50 to-yellow-50 border border-orange-100 rounded-3xl shadow-2xl p-10 max-w-md w-full">
         <div className="w-24 h-24 bg-gradient-to-br from-orange-300 to-pink-300 rounded-full flex items-center justify-center text-white text-4xl font-bold mx-auto mb-6 shadow-lg">
           {admin.name?.charAt(0).toUpperCase()}
         </div>
 
-        <h1 className="text-3xl font-bold text-center text-orange-600 mb-6">Admin Profile</h1>
+        <h1 className="text-3xl font-bold text-center text-orange-600 mb-6">
+          Admin Profile
+        </h1>
 
         <ProfileItem icon={<FaUser className="text-orange-500" />} label="Name" value={admin.name} />
         <ProfileItem icon={<FaEnvelope className="text-orange-500" />} label="Email" value={admin.email} />

@@ -30,6 +30,7 @@ const verifyToken = async (req, res, next) => {
 };
 
 router.post('/register', async (req, res) => {
+  console.log("👉 Received request body:", req.body); 
   const { name, email, phone, password } = req.body;
 
   if (!name || !email || !password) {

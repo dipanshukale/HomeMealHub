@@ -6,43 +6,45 @@ import contactRoute from "./Route/contactRoute.js";
 import vendorRoute from "./Route/vendorRoute.js";
 import cartRoute from "./Route/cartRoute.js";
 import orderRoute from "./Route/orderRoute.js";
-import connectDB from "./Database/Connection.js";
 import adminAuthRoutes from './Route/AuthRoute.js';
+import menuRoute from "./Route/menuRoute.js"; // ✅ Add this line
+import connectDB from "./Database/Connection.js";
 import { config } from "dotenv";
 
-
-// dotenv.config();
+// Load env
 config({ path: "./config.env" });
-// Initialize app
+
+// Initialize
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-// Connect to DB
+// Connect DB
 connectDB();
 
 // Middleware
 app.use(
-	cors({
-		origin: ["https://homemealhub-frontend.onrender.com", "https://homemealhub-adminpanel-vrc7.onrender.com"],
-		methods: ["GET", "POST", "PUT", "DELETE"],
-		credentials: true,
-	})
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:5174"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
 );
+
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use("/uploads", express.static("uploads")); 
+app.use("/uploads", express.static("uploads"));
 app.use(bodyParser.json());
 app.use(cookieParser());
-
 
 // Routes
 app.use("/api", contactRoute);
 app.use("/api/vendor", vendorRoute);
 app.use("/api/cart", cartRoute);
 app.use("/api/orders", orderRoute);
-app.use('/api/admin', adminAuthRoutes);
+app.use("/api/admin", adminAuthRoutes);
+app.use("/api/menuitems", menuRoute); // ✅ Add this route
 
-// Server start
+// Start Server
 app.listen(PORT, () => {
-	console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });

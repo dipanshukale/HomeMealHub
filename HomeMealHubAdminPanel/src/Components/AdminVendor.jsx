@@ -30,23 +30,20 @@ const AdminVendor = () => {
       .finally(() => setLoading(false));
   };
 
-  // DELETE vendor function
- const handleDelete = async (id) => {
-  try {
-    const res = await fetch(`http://localhost:8000/api/vendor/delete/${id}`, {
-      method: 'DELETE',
-    });
-    if (res.ok) {
-      // Remove the deleted vendor from local state so UI updates immediately
-      setVendors((prev) => prev.filter((vendor) => vendor._id !== id));
-    } else {
-      console.error('Failed to delete vendor');
+  const handleDelete = async (id) => {
+    try {
+      const res = await fetch(`http://localhost:8000/api/vendor/delete/${id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        setVendors((prev) => prev.filter((vendor) => vendor._id !== id));
+      } else {
+        console.error('Failed to delete vendor');
+      }
+    } catch (err) {
+      console.error('Error deleting vendor:', err);
     }
-  } catch (err) {
-    console.error('Error deleting vendor:', err);
-  }
-};
-
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white p-6 pt-24 md:ml-64">
@@ -68,9 +65,10 @@ const AdminVendor = () => {
                 <th className="px-6 py-4 text-left">Name</th>
                 <th className="px-6 py-4 text-left">Email</th>
                 <th className="px-6 py-4 text-left">Phone</th>
+                <th className="px-6 py-4 text-left">Price</th>
                 <th className="px-6 py-4 text-left">Description</th>
                 <th className="px-6 py-4 text-left">Dish Image</th>
-                <th className="px-6 py-4 text-left">Actions</th> {/* New column */}
+                <th className="px-6 py-4 text-left">Actions</th>
               </tr>
             </thead>
             <tbody className="text-gray-700 divide-y divide-gray-200">
@@ -79,6 +77,9 @@ const AdminVendor = () => {
                   <td className="px-6 py-4 font-semibold">{vendor.name || "N/A"}</td>
                   <td className="px-6 py-4">{vendor.email || "N/A"}</td>
                   <td className="px-6 py-4">{vendor.phone || "N/A"}</td>
+                  <td className="px-6 py-4 font-medium text-green-600">
+                    ₹{vendor.price || "N/A"}
+                  </td>
                   <td className="px-6 py-4 max-w-xs">
                     <div
                       className="line-clamp-2 text-sm text-gray-600"
@@ -106,14 +107,14 @@ const AdminVendor = () => {
                       <span className="text-gray-400 text-sm">No Image</span>
                     )}
                   </td>
-                 <td className="px-6 py-4">
-                  <button
-                    onClick={() => handleDelete(vendor._id)}
-                    className="bg-red-500 hover:bg-red-600 text-white text-xs px-4 py-1 rounded-full shadow"
-                  >
-                    Delete
-                  </button>
-                </td>
+                  <td className="px-6 py-4">
+                    <button
+                      onClick={() => handleDelete(vendor._id)}
+                      className="bg-red-500 hover:bg-red-600 text-white text-xs px-4 py-1 rounded-full shadow"
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -124,7 +125,7 @@ const AdminVendor = () => {
       {selectedImage && (
         <div
           className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-          onClick={() => setSelectedImage(null)} // close modal on backdrop click
+          onClick={() => setSelectedImage(null)}
           tabIndex={-1}
           onKeyDown={(e) => {
             if (e.key === "Escape") setSelectedImage(null);

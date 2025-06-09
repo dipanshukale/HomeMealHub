@@ -1,13 +1,48 @@
 import express from "express";
 import Order from "../models/order.js";
 import MenuItem from "../models/MenuItem.js";
-import nodemailer from "nodemailer"; // For email notifications
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
 
+dotenv.config();
 const router = express.Router();
 
-router.post("/checkoutOrder", async (req, res) => {
-  console.log("Starting Data of Customer:", req.body);
+function sendVendorNotificationEmail(toEmail, dishName, customerName, customerAddress) {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
 
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: toEmail,
+    subject: "New Order Alert - HomeMealHub",
+    html: `
+      <div style="font-family: sans-serif; padding: 10px;">
+        <h2 style="color: #E91E63;">🍽️ HomeMealHub - Dish Purchased</h2>
+        <p>Your dish <strong>${dishName}</strong> was just purchased by <strong>${customerName}</strong>.</p>
+        <p><strong>Delivery Address:</strong> ${customerAddress}</p>
+        <p>Please check your vendor dashboard and start preparing the order.</p>
+        <hr/>
+        <small>This is an automated message from HomeMealHub.</small>
+      </div>
+    `,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error sending vendor email:", error);
+    } else {
+      console.log("Vendor notification email sent:", info.response);
+    }
+  });
+}
+
+
+router.post("/checkoutOrder", async (req, res) => {
   const {
     name,
     phone,
@@ -26,8 +61,8 @@ router.post("/checkoutOrder", async (req, res) => {
   try {
     const newOrder = new Order({
       name,
-      address,
       phone,
+      address,
       cartItems,
       totalAmount,
       shipping,
@@ -36,24 +71,28 @@ router.post("/checkoutOrder", async (req, res) => {
     });
 
     await newOrder.save();
-    console.log("Order Summary of Customer:", req.body);
+    console.log("✅ Order saved:", newOrder);
 
-    // ✅ Notify vendors whose dishes were purchased
     for (let item of cartItems) {
-      const menuItem = await MenuItem.findOne({ name: item.name });
+      const menuItem = await MenuItem.findOne({ name: item.title }); 
 
       if (menuItem && menuItem.vendorEmail) {
-        // Send email to vendor
-        sendVendorNotificationEmail(menuItem.vendorEmail, item.name);
+        sendVendorNotificationEmail(
+          menuItem.vendorEmail,
+          item.title,
+          name,
+          address
+        );
       }
     }
 
     res.status(201).json({ message: "Order placed successfully", order: newOrder });
   } catch (err) {
-    console.error("Order saving error:", err);
+    console.error("❌ Order saving error:", err);
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 router.put("/:orderId/status", async (req, res) => {
   const { orderId } = req.params;
@@ -72,7 +111,7 @@ router.put("/:orderId/status", async (req, res) => {
 
     res.json(updatedOrder);
   } catch (err) {
-    console.error("Error updating status:", err);
+    console.error("❌ Error updating order status:", err);
     res.status(500).json({ error: "Failed to update status" });
   }
 });
@@ -80,37 +119,11 @@ router.put("/:orderId/status", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const orders = await Order.find();
-    console.log(orders);
     res.json(orders);
   } catch (err) {
-    res.status(500).json({ message: "Server Error", error: err });
+    console.error("❌ Fetch orders error:", err);
+    res.status(500).json({ message: "Server Error" });
   }
 });
-
-// ✅ Email Notification Function
-function sendVendorNotificationEmail(toEmail, dishName) {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "yourappemail@gmail.com", // ✅ your sender email
-      pass: "yourapppassword", // ✅ your email app password (not normal password)
-    },
-  });
-
-  const mailOptions = {
-    from: "yourappemail@gmail.com",
-    to: toEmail,
-    subject: "New Order Alert - HomeMealHub",
-    html: `<h3>Your dish <strong>${dishName}</strong> has been purchased!</h3>
-           <p>Please check your dashboard for more details.</p>`,
-  };
-
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      return console.error("Error sending vendor email:", error);
-    }
-    console.log("Vendor notification email sent:", info.response);
-  });
-}
 
 export default router;

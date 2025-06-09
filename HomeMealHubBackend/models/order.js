@@ -9,16 +9,27 @@ const orderSchema = new mongoose.Schema({
       title: String,
       quantity: Number,
       price: Number,
+      vendorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Vendor",
+      },
     },
   ],
   totalAmount: Number,
   shipping: Number,
   gst: Number,
   grandTotal: Number,
- status: {
+  status: {
     type: String,
     default: "Pending",
-    enum: ["Pending", "Preparing", "Ready To Pick", "Out Of Delivery", "Delivered", "Cancelled"],
+    enum: [
+      "Pending",
+      "Preparing",
+      "Ready To Pick",
+      "Out Of Delivery",
+      "Delivered",
+      "Cancelled",
+    ],
   },
   createdAt: {
     type: Date,
@@ -27,5 +38,4 @@ const orderSchema = new mongoose.Schema({
 });
 
 const Order = mongoose.model("Order", orderSchema);
-
 export default Order;

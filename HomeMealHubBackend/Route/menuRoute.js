@@ -1,4 +1,4 @@
-// Route/menuRoute.js
+
 import express from "express";
 import MenuItem from "../models/MenuItem.js";
 

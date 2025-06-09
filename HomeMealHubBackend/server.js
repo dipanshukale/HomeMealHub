@@ -7,7 +7,7 @@ import vendorRoute from "./Route/vendorRoute.js";
 import cartRoute from "./Route/cartRoute.js";
 import orderRoute from "./Route/orderRoute.js";
 import adminAuthRoutes from './Route/AuthRoute.js';
-import menuRoute from "./Route/menuRoute.js"; // ✅ Add this line
+import menuRoute from "./Route/menuRoute.js"; 
 import connectDB from "./Database/Connection.js";
 import { config } from "dotenv";
 
@@ -42,7 +42,7 @@ app.use("/api/vendor", vendorRoute);
 app.use("/api/cart", cartRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/admin", adminAuthRoutes);
-app.use("/api/menuitems", menuRoute); // ✅ Add this route
+app.use("/api/menuitems", menuRoute); 
 
 // Start Server
 app.listen(PORT, () => {

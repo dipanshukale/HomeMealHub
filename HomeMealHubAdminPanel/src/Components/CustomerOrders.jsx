@@ -45,7 +45,6 @@ const formatDate = (dateStr) => {
 const CustomerOrders = () => {
   const [orders, setOrders] = useState([]);
 
-  // Fetch orders from backend
   const fetchOrders = () => {
     axios
       .get("http://localhost:8000/api/orders")

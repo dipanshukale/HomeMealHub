@@ -2,105 +2,79 @@ import express from "express";
 import multer from "multer";
 import cloudinary from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
-import Vendor from "../models/vendor.js"
+import Vendor from "../models/vendor.js";
 
 const router = express.Router();
 
+// ✅ Configure Cloudinary
 cloudinary.v2.config({
-	cloud_name: "dpnh5nu9x",
-	api_key: "764152513891214",
-	api_secret: "St7X6YiSRgSUsKnA02y-saJ-FoY",
+  cloud_name: "dpnh5nu9x",
+  api_key: "764152513891214",
+  api_secret: "St7X6YiSRgSUsKnA02y-saJ-FoY",
 });
 
-
+// ✅ Setup Cloudinary Storage for Multer
 const storage = new CloudinaryStorage({
-	cloudinary: cloudinary.v2,
-	params: {
-		folder: "HomeMealHub",
-		format: async (req, file) => "jpeg",
-		public_id: (req, file) => Date.now() + "-" + file.originalname,
-	},
+  cloudinary: cloudinary.v2,
+  params: {
+    folder: "HomeMealHub",
+    format: async () => "jpeg", 
+    public_id: (req, file) => Date.now() + "-" + file.originalname,
+  },
 });
 
 const upload = multer({ storage: storage });
-// 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
-// 
-// const storage = multer.diskStorage({
-  // destination: function (req, file, cb) {
-    // cb(null, "uploads/");
-  // },
-  // filename: function (req, file, cb) {
-    // const ext = path.extname(file.originalname);
-    // const name = `${Date.now()}-${file.originalname}`;
-    // cb(null, name);
-  // },
-// });
-// 
-// const upload = multer({
-  // storage: storage,
-  // limits: { fileSize: 5 * 1024 * 1024 },
-  // fileFilter: (req, file, cb) => {
-    // if (file.mimetype.startsWith("image/")) cb(null, true);
-    // else cb(new Error("Only image files are allowed"));
-  // },
-// });
 
-
+// ✅ POST /vendordata - Submit Vendor Form
 router.post("/vendordata", upload.single("dishImage"), async (req, res) => {
   try {
+    const { name, email, phone, description, dishName, price } = req.body;
 
-    console.log("BODY : ", req.body);
-    console.log("FILE : ", req.file);
-
-    const { name, email, phone, description } = req.body;
-    const result = await cloudinary.uploader.upload(req.file.path);
-
+    const result = await cloudinary.v2.uploader.upload(req.file.path);
+  
     const newVendor = new Vendor({
       name,
       email,
       phone,
       description,
-      dishImage: result.secure_url, 
+      dishName,
+      price,
+      dishImage: result.secure_url,
     });
 
-    console.log(newVendor);
-
     await newVendor.save();
-    res.status(201).json({ message: "Vendor data saved successfully."});
+    res.status(201).json({ message: "Vendor data saved successfully." });
   } catch (error) {
-    console.error(error);
+    console.error("Error in /vendordata:", error);
     res.status(500).json({ message: "Failed to save vendor data." });
   }
 });
 
+// ✅ GET /data - Fetch All Vendors
 router.get("/data", async (req, res) => {
   try {
     const vendors = await Vendor.find();
-    res.json(vendors);
-    console.log("vendor data is here!")
-    console.log(vendors);
+    res.status(200).json(vendors);
   } catch (error) {
-    console.error('Error fetching vendor data:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error("Error fetching vendor data:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
-router.delete('/delete/:id', async (req, res) => {
-  const vendorId = req.params.id;
-
+// ✅ DELETE /delete/:id - Delete Vendor
+router.delete("/delete/:id", async (req, res) => {
   try {
-    const deletedVendor = await Vendor.findByIdAndDelete(vendorId);
+    const deletedVendor = await Vendor.findByIdAndDelete(req.params.id);
 
     if (!deletedVendor) {
-      return res.status(404).json({ message: 'Vendor not found' });
+      return res.status(404).json({ message: "Vendor not found" });
     }
 
-    return res.status(200).json({ message: 'Vendor deleted successfully' });
+    res.status(200).json({ message: "Vendor deleted successfully" });
   } catch (error) {
-    console.error('Error deleting vendor:', error);
-    return res.status(500).json({ message: 'Server error' });
+    console.error("Error deleting vendor:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
+
 export default router;

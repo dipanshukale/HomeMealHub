@@ -1,14 +1,17 @@
-// models/MenuItem.js
 import mongoose from 'mongoose';
 
 const menuItemSchema = new mongoose.Schema({
-  name: String,
+  name: { type: String, required: true },
   description: String,
-  price: Number,
-  imageUrl: String, // from Cloudinary
+  price: { type: Number, required: true },
+  imageUrl: String, 
   isVendorDish: {
     type: Boolean,
     default: true,
+  },
+  vendorEmail: {
+    type: String,
+    required: true, 
   }
 });
 

@@ -22,7 +22,7 @@ const AdminRegister = () => {
     e.preventDefault();
     setError('');
     try {
-      const res = await axios.post('http://localhost:8000/api/admin/register', formData);
+      const res = await axios.post('https://homemealhub-backend.onrender.com/api/admin/register', formData);
       if (res.data.success) {
         navigate('/admin/login');
       } else {

@@ -25,12 +25,12 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/vendor/data")
+      .get("https://homemealhub-backend.onrender.com/api/vendor/data")
       .then((res) => setVendorCount(res.data.length))
       .catch((err) => console.error("Error fetching vendors:", err));
 
     axios
-      .get("http://localhost:8000/api/admin/contacts")
+      .get("https://homemealhub-backend.onrender.com/api/admin/contacts")
       .then((res) => {
         setOrderCount(res.data.length);
         setCustomerCount(res.data.length);

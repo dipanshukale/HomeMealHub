@@ -50,17 +50,17 @@ const CheckOutPage = () => {
 
     setLoading(true); // Start loader
     try {
-      await axios.post(
-        "/api/orders/checkoutOrder",
-        {
-          ...userData,
-          cartItems,
-          totalAmount,
-          shipping,
-          gst,
-          grandTotal,
-        }
-      );
+      // await axios.post(
+      //   "/api/orders/checkoutOrder",
+      //   {
+      //     ...userData,
+      //     cartItems,
+      //     totalAmount,
+      //     shipping,
+      //     gst,
+      //     grandTotal,
+      //   }
+      // );
 
       navigate("/razorpay", {
         state: {

@@ -24,7 +24,7 @@ connectDB();
 // Middleware
 app.use(
   cors({
-    origin: ["https://homemealhub-frontend.onrender.com", "http://localhost:5174"],
+    origin: ["https://homemealhub-frontend.onrender.com", "https://homemealhub-adminpanel-vrc7.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })

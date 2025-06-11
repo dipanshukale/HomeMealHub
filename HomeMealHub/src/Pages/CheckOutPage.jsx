@@ -51,7 +51,7 @@ const CheckOutPage = () => {
     setLoading(true); // Start loader
     try {
       await axios.post(
-        "https://homemealhub-backend.onrender.com/api/orders/checkoutOrder",
+        "/api/orders/checkoutOrder",
         {
           ...userData,
           cartItems,

@@ -114,7 +114,7 @@ const MealData = ({ option, location }) => {
 
   const fetchVendorMeals = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/vendor/data");
+      const res = await fetch("https://homemealhub-backend.onrender.com/api/vendor/data");
       if (!res.ok) throw new Error("Failed to fetch vendor meals");
       const data = await res.json();
 

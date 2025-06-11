@@ -14,7 +14,7 @@ const AdminVendor = () => {
 
   const fetchVendors = () => {
     setLoading(true);
-    fetch("http://localhost:8000/api/vendor/data")
+    fetch("https://homemealhub-backend.onrender.com/api/vendor/data")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch vendor data");
         return res.json();
@@ -32,7 +32,7 @@ const AdminVendor = () => {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/vendor/delete/${id}`, {
+      const res = await fetch(`https://homemealhub-backend.onrender.com/api/vendor/delete/${id}`, {
         method: 'DELETE',
       });
       if (res.ok) {

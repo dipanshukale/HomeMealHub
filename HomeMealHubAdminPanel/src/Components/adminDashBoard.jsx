@@ -129,7 +129,7 @@ const AdminDashboard = () => {
                     </td>
                     <td className="px-6 py-3">{order.name || "N/A"}</td>
                     <td className="px-6 py-3 font-semibold text-indigo-700">
-                      ₹{order.totalAmount?.toLocaleString() || "0"}
+                      ₹{order.totalAmount || "0"}
                     </td>
                     <td className="px-6 py-3">
                       <span

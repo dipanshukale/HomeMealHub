@@ -36,7 +36,7 @@ const AdminDashboard = () => {
         setCustomerCount(res.data.length);
         setRecentOrders(res.data.slice(-5).reverse());
         const total = res.data.reduce(
-          (sum, Order) => sum + (Order.totalAmount || 0),
+          (sum, Order) => sum + (Order.grandTotal || 0),
           0
         );
         setRevenue(total);

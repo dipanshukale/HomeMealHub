@@ -30,14 +30,14 @@ const AdminDashboard = () => {
       .catch((err) => console.error("Error fetching vendors:", err));
 
     axios
-      .get("https://homemealhub-backend.onrender.com/api/admin/contacts")
+      .get("https://homemealhub-backend.onrender.com/api/orders")
       .then((res) => {
         setOrderCount(res.data.length);
         setCustomerCount(res.data.length);
         setRecentOrders(res.data.slice(-5).reverse());
         console.log(res.data);
         const total = res.data.reduce(
-          (sum, Order) => sum + (Order.grandTotal || 0),
+          (sum, Order) => sum + (Order.totalAmount || 0),
           0
         );
         setRevenue(total);

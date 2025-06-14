@@ -3,7 +3,7 @@ import Contact from '../models/Contact.js';
 
 const router = express.Router();
 
-router.post('/contact', async (req, res) => {
+router.post('/contacts', async (req, res) => {
   try {
     const { name, email, subject, message } = req.body;
     console.log("Name Of Customer : ", name);

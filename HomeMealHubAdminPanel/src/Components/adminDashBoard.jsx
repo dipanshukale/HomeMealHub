@@ -72,7 +72,7 @@ const AdminDashboard = () => {
           },
           {
             title: "Total Revenue",
-            count: revenue,
+            count: `₹${revenue.toLocaleString()}`,
             icon: <DollarSign size={40} className="text-white" />,
             bg: "bg-yellow-500",
           },

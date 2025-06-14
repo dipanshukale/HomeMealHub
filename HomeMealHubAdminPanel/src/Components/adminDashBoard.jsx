@@ -36,7 +36,7 @@ const AdminDashboard = () => {
         setCustomerCount(res.data.length);
         setRecentOrders(res.data.slice(-5).reverse());
         const total = res.data.reduce(
-          (sum, order) => sum + (orders.totalAmount || 0),
+          (sum, order) => sum + (order.totalAmount || 0),
           0
         );
         setRevenue(total);
@@ -72,7 +72,7 @@ const AdminDashboard = () => {
           },
           {
             title: "Total Revenue",
-            count: `₹${revenue.toLocaleString()}`,
+            count: revenue,
             icon: <DollarSign size={40} className="text-white" />,
             bg: "bg-yellow-500",
           },
